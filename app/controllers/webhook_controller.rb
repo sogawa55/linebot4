@@ -15,16 +15,17 @@ class WebhookController < ApplicationController
     
     event = params["events"][0]
     replyToken = event["replyToken"]
+    user_text = JSON.parse(event["text"])
   
     docomo_client = DocomoClient.new(api_key: ENV["DOCOMO_API_KEY"])
       response = nil
       last_dialogue = LastDialogue.find_by(mid: params["id"])
       
       if last_dialogue.nil?
-        response =  docomo_client.dialogue(JSON.parse(params['text']))
+        response =  docomo_client.dialogue(user_text)
         last_dialogue = LastDialogue.new(mid:params["id"], mode:response.body['mode'], da:response.body['da'], context:response.body['context'])
       else
-        response =  docomo_client.dialogue(JSON.parse(params['text']), last_dialogue.mode, last_dialogue.context)
+        response =  docomo_client.dialogue(user_text, last_dialogue.mode, last_dialogue.context)
         last_dialogue.mode = response.body['mode']
         last_dialogue.da = response.body['da']
         last_dialogue.context = response.body['context']
