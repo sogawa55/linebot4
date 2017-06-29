@@ -31,7 +31,7 @@ class WebhookController < ApplicationController
         last_dialogue.context = response.body['context']
       end
       last_dialogue.save!
-      message = response.body['utt']
+      message = JSON.parse(response.body['utt'])
       
       print message
       p message
