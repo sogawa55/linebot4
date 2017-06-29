@@ -15,6 +15,8 @@ class WebhookController < ApplicationController
     
     event = params["events"][0]
     replyToken = event["replyToken"]
+    
+    print params['text']
   
     docomo_client = DocomoClient.new(api_key: ENV["DOCOMO_API_KEY"])
       response = nil
@@ -29,7 +31,10 @@ class WebhookController < ApplicationController
         last_dialogue.context = response.body['context']
       end
       last_dialogue.save!
-      message = response['utt']
+      message = response.body['utt']
+      
+      print message
+      p message
     
       output_text = message
 
