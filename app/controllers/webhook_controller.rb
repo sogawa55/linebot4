@@ -20,16 +20,16 @@ class WebhookController < ApplicationController
       response = nil
       last_dialogue = LastDialogue.find_by(mid:params['userId'])
       if last_dialogue.nil?
-        response =  docomo_client.dialogue(params['text'])
+        response =  docomo_client.create_dialogue(params['text'])
         last_dialogue = LastDialogue.new(mid: params['userId'], mode: response.body['mode'], da: response.body['da'], context: response.body['context'])
       else
-        response =  docomo_client.dialogue(params['text'], last_dialogue.mode, last_dialogue.context)
+        response =  docomo_client.create_dialogue(params['text'], last_dialogue.mode, last_dialogue.context)
         last_dialogue.mode = response.body['mode']
         last_dialogue.da = response.body['da']
         last_dialogue.context = response.body['context']
       end
       last_dialogue.save!
-      message = response['utt']
+      message = response.body['utt']
     
       output_text = message
 
