@@ -19,9 +19,9 @@ class WebhookController < ApplicationController
     
       client = Docomoru::Client.new(api_key: ENV["DOCOMO_API_KEY"])
       response = client.create_dialogue(params['text'])
-      params['text'] = response.body['utt']
+      input_text = response.body['utt']
     
-      output_text = {'utt':params['text'] , 'mode': 'dialog', }
+      output_text = {'utt':input_text ,'mode':'dialog','t':20 }
 
     client = LineClient.new(CHANNEL_ACCESS_TOKEN, OUTBOUND_PROXY)
     res = client.reply(replyToken, output_text)
