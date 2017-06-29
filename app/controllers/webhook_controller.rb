@@ -15,7 +15,7 @@ class WebhookController < ApplicationController
     
     event = params["events"][0]
     replyToken = event["replyToken"]
-    user_text = JSON.parse(event["text"])
+    user_text = event["text"].to_s
   
     docomo_client = DocomoClient.new(api_key: ENV["DOCOMO_API_KEY"])
       response = nil
