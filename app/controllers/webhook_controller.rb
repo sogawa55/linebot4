@@ -16,12 +16,22 @@ class WebhookController < ApplicationController
     event = params["events"][0]
     replyToken = event["replyToken"]
   
+    docomo_client = DocomoClient.new(api_key: ENV["DOCOMO_API_KEY"])
+      response = nil
+      last_dialogue = LastDialogue.find_by(mid: from_mid)
+      if last_dialogue.nil?
+        response =  docomo_client.dialogue(params['text'])
+        last_dialogue = LastDialogue.new(mid: from_mid, mode: response.body['mode'], da: response.body['da'], context: response.body['context'])
+      else
+        response =  docomo_client.dialogue(params['text'], last_dialogue.mode, last_dialogue.context)
+        last_dialogue.mode = response.body['mode']
+        last_dialogue.da = response.body['da']
+        last_dialogue.context = response.body['context']
+      end
+      last_dialogue.save!
+      message = response['utt']
     
-      client = Docomoru::Client.new(api_key: ENV["DOCOMO_API_KEY"])
-      response = client.create_dialogue(params['text'])
-      input_text = response.body['utt']
-    
-      output_text = {'utt':input_text ,'mode':'dialog','t':20 }
+      output_text = message
 
     client = LineClient.new(CHANNEL_ACCESS_TOKEN, OUTBOUND_PROXY)
     res = client.reply(replyToken, output_text)
