@@ -14,7 +14,9 @@ class WebhookController < ApplicationController
     event = params["events"][0]
     replyToken = event["replyToken"]
     
-      event.each do |msg|
+      params = JSON.parse(request.body.read)
+    
+      params['result'].each do |msg|
       client = Docomoru::Client.new(api_key: ENV["DOCOMO_API_KEY"])
       response = client.create_dialogue(msg['content']['text'])
       msg['content']['text'] = response.body['utt']
