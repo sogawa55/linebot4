@@ -20,11 +20,11 @@ class WebhookController < ApplicationController
   
     docomo_client = DocomoClient.new(api_key: ENV["DOCOMO_API_KEY"])
       response = nil
-      last_dialogue = LastDialogue.find_by(mid:params['userId'])
+      last_dialogue = LastDialogue.find_by(mid:params['from'])
       
       if last_dialogue.nil?
         response =  docomo_client.dialogue(params['text'])
-        last_dialogue = LastDialogue.new(mid: params['userId'], mode: response.body['mode'], da: response.body['da'], context: response.body['context'])
+        last_dialogue = LastDialogue.new(mid: params['from'], mode: response.body['mode'], da: response.body['da'], context: response.body['context'])
       else
         response =  docomo_client.dialogue(params['text'], last_dialogue.mode, last_dialogue.context)
         last_dialogue.mode = response.body['mode']
