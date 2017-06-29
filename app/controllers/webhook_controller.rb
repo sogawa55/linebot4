@@ -21,7 +21,7 @@ class WebhookController < ApplicationController
       response = client.create_dialogue(params['text'])
       params['text'] = response.body['utt']
     
-      output_text = params['text']
+      output_text = {'utt':params['text'] , 'mode': 'dialog', }
 
     client = LineClient.new(CHANNEL_ACCESS_TOKEN, OUTBOUND_PROXY)
     res = client.reply(replyToken, output_text)
