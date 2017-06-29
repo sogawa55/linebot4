@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  mid: MyString
+  mode: MyString
+  da: 1
+  context: MyString
+
+two:
+  mid: MyString
+  mode: MyString
+  da: 1
+  context: MyString
