@@ -17,12 +17,11 @@ class WebhookController < ApplicationController
     replyToken = event["replyToken"]
   
     
-      event['messeage'].each do |msg|
       client = Docomoru::Client.new(api_key: ENV["DOCOMO_API_KEY"])
-      response = client.create_dialogue(msg['content'])
-      msg['content'] = response.body['utt']
+      response = client.create_dialogue(params['text'])
+      params['text'] = response.body['utt']
     
-      output_text = msg['content']
+      output_text = params['text']
 
     client = LineClient.new(CHANNEL_ACCESS_TOKEN, OUTBOUND_PROXY)
     res = client.reply(replyToken, output_text)
