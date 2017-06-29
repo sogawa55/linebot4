@@ -33,7 +33,6 @@ class WebhookController < ApplicationController
     end
 
     render :nothing => true, status: :ok
-    end
   end
 
 
