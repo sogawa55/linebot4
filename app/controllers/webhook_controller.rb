@@ -26,7 +26,7 @@ class WebhookController < ApplicationController
         response =  docomo_client.dialogue(params['text'])
         last_dialogue = LastDialogue.new(mid: params['id'], mode: response.body['mode'], da: response.body['da'], context: response.body['context'])
       else
-        response =  docomo_client.dialogue(params['text'], last_dialogue.mode[0], last_dialogue.context[0])
+        response =  docomo_client.dialogue(params['text'], last_dialogue.mode, last_dialogue.context)
         last_dialogue.mode = response.body['mode']
         last_dialogue.da = response.body['da']
         last_dialogue.context = response.body['context']
