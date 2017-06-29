@@ -10,13 +10,14 @@ class WebhookController < ApplicationController
     unless is_validate_signature
       render :nothing => true, status: 470
     end
-
+    
+    params = JSON.parse(request.body.read)
+    
     event = params["events"][0]
     replyToken = event["replyToken"]
+  
     
-      params = JSON.parse(request.body.read)
-    
-      params['result'].each do |msg|
+      event.each do |msg|
       client = Docomoru::Client.new(api_key: ENV["DOCOMO_API_KEY"])
       response = client.create_dialogue(msg['content']['text'])
       msg['content']['text'] = response.body['utt']
