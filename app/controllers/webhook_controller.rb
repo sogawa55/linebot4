@@ -14,10 +14,15 @@ class WebhookController < ApplicationController
     event = params["events"][0]
     event_type = event["type"]
     replyToken = event["replyToken"]
+    
+      event.each do |msg|
+      client = Docomoru::Client.new(api_key: ENV["DOCOMO_API_KEY"])
+      response = client.create_dialogue(msg['content']['text'])
+      msg['content']['text'] = response.body['utt']
 
     case event_type
     when "message"
-      input_text = event["message"]["text"]
+      input_text = msg['content']['text']
       output_text = input_text
     end
 
