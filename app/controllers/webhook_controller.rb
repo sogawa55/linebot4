@@ -12,20 +12,14 @@ class WebhookController < ApplicationController
     end
 
     event = params["events"][0]
-    event_type = event["type"]
     replyToken = event["replyToken"]
     
       event.each do |msg|
       client = Docomoru::Client.new(api_key: ENV["DOCOMO_API_KEY"])
       response = client.create_dialogue(msg['content']['text'])
       msg['content']['text'] = response.body['utt']
-      end
-
-    case event_type
-    when "message"
-      input_text = msg['content']['text']
-      output_text = input_text
-    end
+    
+      output_text = msg['content']['text']
 
     client = LineClient.new(CHANNEL_ACCESS_TOKEN, OUTBOUND_PROXY)
     res = client.reply(replyToken, output_text)
@@ -37,7 +31,9 @@ class WebhookController < ApplicationController
     end
 
     render :nothing => true, status: :ok
+    end
   end
+
 
   private
   # verify access from LINE
