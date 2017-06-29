@@ -29,7 +29,7 @@ class WebhookController < ApplicationController
         last_dialogue.context = response.body['context']
       end
       last_dialogue.save!
-      message = response.body['utt']
+      message = response['utt']
     
       output_text = message
 
