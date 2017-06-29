@@ -19,6 +19,7 @@ class WebhookController < ApplicationController
       client = Docomoru::Client.new(api_key: ENV["DOCOMO_API_KEY"])
       response = client.create_dialogue(msg['content']['text'])
       msg['content']['text'] = response.body['utt']
+      end
 
     case event_type
     when "message"
