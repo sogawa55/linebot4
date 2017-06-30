@@ -26,7 +26,7 @@ gem 'faraday'
 gem 'faraday_middleware'
 gem 'docomoru'
 
-gem 'redis'
+gem 'redis', '3.2.0'
 gem 'redis-rails'
 
 # Use ActiveModel has_secure_password
