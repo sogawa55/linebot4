@@ -19,12 +19,11 @@ class WebhookController < ApplicationController
   
      docomo_client = DocomoClient.new(api_key: ENV["DOCOMO_API_KEY"])
      
-     redis = Redis.new(ENV["REDISCLOUD_URL"])
-     context = redis.get(response.body['context'])
+     context = @redis.get('context', params['context'])
      
      response =  docomo_client.dialogue(user_text, context)
 
-     redis = redis.set('context', response.body['context'])
+     context = @redis.set('context', response.body['context'])
     
     output_text = response.body['uttu']
 
