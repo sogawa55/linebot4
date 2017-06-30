@@ -24,9 +24,10 @@ class WebhookController < ApplicationController
     else
      context =  response.body['context']
      response =  docomo_client.dialogue(user_text, context)
-    end 
+    end
+    message = response.body['utt']
      
-     output_text = response.body
+    output_text = message
 
     client = LineClient.new(CHANNEL_ACCESS_TOKEN, OUTBOUND_PROXY)
     res = client.reply(replyToken, output_text)
