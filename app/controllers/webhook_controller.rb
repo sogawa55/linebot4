@@ -13,7 +13,7 @@ class WebhookController < ApplicationController
     
     params = JSON.parse(request.body.read)
     
-    event = params["events"]
+    event = params["events"][0]
     replyToken = event["replyToken"]
     user_text = event["text"].to_s
   
