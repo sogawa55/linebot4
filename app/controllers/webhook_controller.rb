@@ -13,7 +13,7 @@ class WebhookController < ApplicationController
     
     params = JSON.parse(request.body.read)
     
-    event = params["events"][0]
+    event = params["events"]
     replyToken = event["replyToken"]
     user_text = event["text"].to_s
   
@@ -31,7 +31,7 @@ class WebhookController < ApplicationController
         last_dialogue.context = response.body['context']
       end
       last_dialogue.save!
-      message = response.body['utt']
+      message = response.body['utt']['context']
     
       output_text = message
 
