@@ -17,23 +17,16 @@ class WebhookController < ApplicationController
     replyToken = event["replyToken"]
     user_text = event["text"].to_s
   
-    docomo_client = DocomoClient.new(api_key: ENV["DOCOMO_API_KEY"])
-      response = nil
-      last_dialogue = LastDialogue.find_by(mid: params["id"])
-      
-      if last_dialogue.nil?
-        response =  docomo_client.dialogue(user_text)
-        last_dialogue = LastDialogue.new(mid:params["id"], mode:response.body['mode'], da:response.body['da'], context:response.body['context'])
-      else
-        response =  docomo_client.dialogue(user_text, last_dialogue.mode, last_dialogue.context)
-        last_dialogue.mode = response.body['mode']
-        last_dialogue.da = response.body['da']
-        last_dialogue.context = response.body['context']
-      end
-      last_dialogue.save!
-      message = response.body['utt']
+     docomo_client = DocomoClient.new(api_key: ENV["DOCOMO_API_KEY"])
+     
+     redis = Redis.new(ENV["REDISCLOUD_URL"])
+     context = redis.get(response.body['context'])
+     
+     response =  docomo_client.dialogue(user_text, context)
+
+     redis = redis.set('context', response.body['context'])
     
-      output_text = message
+    output_text = response.body['uttu']
 
     client = LineClient.new(CHANNEL_ACCESS_TOKEN, OUTBOUND_PROXY)
     res = client.reply(replyToken, output_text)
