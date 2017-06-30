@@ -21,10 +21,9 @@ class WebhookController < ApplicationController
      
     if response.body['context'].nil? then
      response =  docomo_client.dialogue(user_text, context=nil)
-    context =  @redis.set(response.body['context'])
     else
+     context =  response.body['context']
      response =  docomo_client.dialogue(user_text, context)
-    context =  @redis.set(response.body['context'])
     end 
      
      output_text = response.body['uttu']
