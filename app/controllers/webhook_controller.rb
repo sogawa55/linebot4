@@ -26,7 +26,7 @@ class WebhookController < ApplicationController
      response =  docomo_client.dialogue(user_text, context)
     end 
      
-     output_text = response.body['uttu']
+     output_text = response.body
 
     client = LineClient.new(CHANNEL_ACCESS_TOKEN, OUTBOUND_PROXY)
     res = client.reply(replyToken, output_text)
