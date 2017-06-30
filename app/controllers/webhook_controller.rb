@@ -19,12 +19,13 @@ class WebhookController < ApplicationController
   
      docomo_client = DocomoClient.new(api_key: ENV["DOCOMO_API_KEY"])
      
-     if response.body['context'].nil? then
+    if response.body['context'].nil? then
      response =  docomo_client.dialogue(user_text, context=nil)
     context =  @redis.set(response.body['context'])
     else
      response =  docomo_client.dialogue(user_text, context)
     context =  @redis.set(response.body['context'])
+    end 
      
      output_text = response.body['uttu']
 
